@@ -13,3 +13,6 @@
       width: 800px;
       height: 200px;
   }
+  svg {
+      position: absolute;
+  }

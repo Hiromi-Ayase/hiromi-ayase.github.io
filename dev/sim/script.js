@@ -1,33 +1,34 @@
 
 var INIT_DATA = { "data": [
-  {"transform": {"x":0, "y":0, "r":0}, "color": 0},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 1},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 2},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 3},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 4},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 5},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 6},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 7},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 8},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 9},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 10},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 11},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 12},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 13},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 14},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 15},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 16},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 17},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 18},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 19},
-  {"transform": {"x":0, "y":0, "r":0}, "color": 20}
+  {"id": 0, "transform": {"x":0, "y":0, "r":0}, "color": 0},
+  {"id": 1, "transform": {"x":0, "y":0, "r":0}, "color": 1},
+  {"id": 2, "transform": {"x":0, "y":0, "r":0}, "color": 2},
+  {"id": 3, "transform": {"x":0, "y":0, "r":0}, "color": 3},
+  {"id": 4, "transform": {"x":0, "y":0, "r":0}, "color": 4},
+  {"id": 5, "transform": {"x":0, "y":0, "r":0}, "color": 5},
+  {"id": 6, "transform": {"x":0, "y":0, "r":0}, "color": 6},
+  {"id": 7, "transform": {"x":0, "y":0, "r":0}, "color": 7},
+  {"id": 8, "transform": {"x":0, "y":0, "r":0}, "color": 8},
+  {"id": 9, "transform": {"x":0, "y":0, "r":0}, "color": 9},
+  {"id": 10, "transform": {"x":0, "y":0, "r":0}, "color": 10},
+  {"id": 11, "transform": {"x":0, "y":0, "r":0}, "color": 11},
+  {"id": 12, "transform": {"x":0, "y":0, "r":0}, "color": 12},
+  {"id": 13, "transform": {"x":0, "y":0, "r":0}, "color": 13},
+  {"id": 14, "transform": {"x":0, "y":0, "r":0}, "color": 14},
+  {"id": 15, "transform": {"x":0, "y":0, "r":0}, "color": 15},
+  {"id": 16, "transform": {"x":0, "y":0, "r":0}, "color": 16},
+  {"id": 17, "transform": {"x":0, "y":0, "r":0}, "color": 17},
+  {"id": 18, "transform": {"x":0, "y":0, "r":0}, "color": 18},
+  {"id": 19, "transform": {"x":0, "y":0, "r":0}, "color": 19},
+  {"id": 20, "transform": {"x":0, "y":0, "r":0}, "color": 20}
 ]};
 
 var CONST = {
-  SIZE: 60,
+  SIZE: 55,
   LENGTH: 50,
   ROOT3: Math.sqrt(3),
   ROTATE_SPEED: 30,
+  SNAP: [25, 25 / 2 * Math.sqrt(3)] 
 };
 
 //RED, GREEN, BLUE, YELLOW
@@ -79,14 +80,19 @@ function draw() {
     if (d3.event.sourceEvent.wheelDelta !== undefined) {
       trans.r += (d3.event.sourceEvent.wheelDelta < 0 ? 1 : -1) * CONST.ROTATE_SPEED;
     }
+
     if (d3.event.dx !== undefined && d3.event.dy !== undefined) {
       trans.x += d3.event.dx;
       trans.y += d3.event.dy;
     }
+
+    var x = Math.floor(trans.x / CONST.SNAP[0]) * CONST.SNAP[0];
+    var y = Math.floor(trans.y / CONST.SNAP[1]) * CONST.SNAP[1] + Math.cos(trans.r / 60 * Math.PI) * CONST.LENGTH / 6.9;
+    
     $("#data").val(JSON.stringify(json));
 
     d3.select(this).attr("transform", function (d, i) {
-      return "translate(" + [trans.x, trans.y] + "),rotate(" + trans.r + ")";
+      return "translate(" + [x, y] + "),rotate(" + trans.r + ",0, " + (CONST.SIZE * 0.25 / 2) + ")";
     });
   };
 
@@ -127,7 +133,19 @@ function draw() {
       return CONST.SIZE;
     },
     height: function (d) {
-      return CONST.SIZE;
+      return CONST.SIZE - CONST.SIZE * 0.25;
+    },
+    left: function (d) {
+      var n = Math.floor(900 / CONST.SIZE);
+      var id = d.id % n;;
+      var v =  id * CONST.SIZE;
+      d.transform.x = v;
+      return v;
+    },
+    top: function (d) {
+      var v =  Math.floor((d.id * CONST.SIZE) / 900) * CONST.SIZE;
+      d.transform.y = v;
+      return v;
     },
     transform: function (d) {
       return "translate(" + [d.transform.x, d.transform.y] + "),rotate(" + d.transform.r + ")";
