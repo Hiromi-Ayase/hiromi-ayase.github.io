@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  
+  #viewer {
+      background-color: #000;
+      width: 1000px;
+      height: 1200px;
+  }
+  #data {
+      width: 800px;
+      height: 200px;
+  }
