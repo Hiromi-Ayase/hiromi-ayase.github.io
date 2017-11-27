@@ -5,9 +5,10 @@
   }
   
   #viewer {
-      background-color: #000;
-      width: 1000px;
-      height: 1200px;
+      background-image: url('bg.jpg');
+      background-size: contain;
+      width: 800px;
+      height: 1000px;
   }
   #data {
       width: 800px;

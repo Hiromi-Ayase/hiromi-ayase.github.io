@@ -1,26 +1,26 @@
 
 var INIT_DATA = { "data": [
-  {"id": 0, "transform": {"x":0, "y":0, "r":0}, "color": 0},
-  {"id": 1, "transform": {"x":0, "y":0, "r":0}, "color": 1},
-  {"id": 2, "transform": {"x":0, "y":0, "r":0}, "color": 2},
-  {"id": 3, "transform": {"x":0, "y":0, "r":0}, "color": 3},
-  {"id": 4, "transform": {"x":0, "y":0, "r":0}, "color": 4},
-  {"id": 5, "transform": {"x":0, "y":0, "r":0}, "color": 5},
-  {"id": 6, "transform": {"x":0, "y":0, "r":0}, "color": 6},
-  {"id": 7, "transform": {"x":0, "y":0, "r":0}, "color": 7},
-  {"id": 8, "transform": {"x":0, "y":0, "r":0}, "color": 8},
-  {"id": 9, "transform": {"x":0, "y":0, "r":0}, "color": 9},
-  {"id": 10, "transform": {"x":0, "y":0, "r":0}, "color": 10},
-  {"id": 11, "transform": {"x":0, "y":0, "r":0}, "color": 11},
-  {"id": 12, "transform": {"x":0, "y":0, "r":0}, "color": 12},
-  {"id": 13, "transform": {"x":0, "y":0, "r":0}, "color": 13},
-  {"id": 14, "transform": {"x":0, "y":0, "r":0}, "color": 14},
-  {"id": 15, "transform": {"x":0, "y":0, "r":0}, "color": 15},
-  {"id": 16, "transform": {"x":0, "y":0, "r":0}, "color": 16},
-  {"id": 17, "transform": {"x":0, "y":0, "r":0}, "color": 17},
-  {"id": 18, "transform": {"x":0, "y":0, "r":0}, "color": 18},
-  {"id": 19, "transform": {"x":0, "y":0, "r":0}, "color": 19},
-  {"id": 20, "transform": {"x":0, "y":0, "r":0}, "color": 20}
+  {"id": 0, "transform": {"x":0, "y":10, "r":0}, "color": 0},
+  {"id": 1, "transform": {"x":55, "y":10, "r":0}, "color": 1},
+  {"id": 2, "transform": {"x":110, "y":10, "r":0}, "color": 2},
+  {"id": 3, "transform": {"x":165, "y":10, "r":0}, "color": 3},
+  {"id": 4, "transform": {"x":220, "y":10, "r":0}, "color": 4},
+  {"id": 5, "transform": {"x":275, "y":10, "r":0}, "color": 5},
+  {"id": 6, "transform": {"x":330, "y":10, "r":0}, "color": 6},
+  {"id": 7, "transform": {"x":385, "y":10, "r":0}, "color": 7},
+  {"id": 8, "transform": {"x":440, "y":10, "r":0}, "color": 8},
+  {"id": 9, "transform": {"x":495, "y":10, "r":0}, "color": 9},
+  {"id": 10, "transform": {"x":550, "y":10, "r":0}, "color": 10},
+  {"id": 11, "transform": {"x":605, "y":10, "r":0}, "color": 11},
+  {"id": 12, "transform": {"x":660, "y":10, "r":0}, "color": 12},
+  {"id": 13, "transform": {"x":715, "y":10, "r":0}, "color": 13},
+  {"id": 14, "transform": {"x":770, "y":10, "r":0}, "color": 14},
+  {"id": 15, "transform": {"x":0, "y":65, "r":0}, "color": 15},
+  {"id": 16, "transform": {"x":55, "y":65, "r":0}, "color": 16},
+  {"id": 17, "transform": {"x":110, "y":65, "r":0}, "color": 17},
+  {"id": 18, "transform": {"x":165, "y":65, "r":0}, "color": 18},
+  {"id": 19, "transform": {"x":220, "y":65, "r":0}, "color": 19},
+  {"id": 20, "transform": {"x":275, "y":65, "r":0}, "color": 20}
 ]};
 
 var CONST = {
@@ -53,7 +53,7 @@ var COLOR = [
   ['red', 'green', 'yellow'],
   ['red', 'yellow', 'blue'],
   ['yellow', 'green', 'blue'],
-  ['white', 'white', 'white'],
+  ['gray', 'gray', 'gray'],
 ];
 
 var sendTimer = null;
@@ -86,8 +86,12 @@ function draw() {
       trans.y += d3.event.dy;
     }
 
-    var x = Math.floor(trans.x / CONST.SNAP[0]) * CONST.SNAP[0];
-    var y = Math.floor(trans.y / CONST.SNAP[1]) * CONST.SNAP[1] + Math.cos(trans.r / 60 * Math.PI) * CONST.LENGTH / 6.9;
+    var x = trans.x;
+    var y = trans.y;
+    if (140 <= x && x <= 620 && 270 <= y && y <= 750) {
+      x = Math.floor(trans.x / CONST.SNAP[0]) * CONST.SNAP[0];
+      y = Math.floor(trans.y / CONST.SNAP[1]) * CONST.SNAP[1] + Math.cos(trans.r / 60 * Math.PI) * CONST.LENGTH / 6.9;
+    }
     
     $("#data").val(JSON.stringify(json));
 
@@ -134,18 +138,6 @@ function draw() {
     },
     height: function (d) {
       return CONST.SIZE - CONST.SIZE * 0.25;
-    },
-    left: function (d) {
-      var n = Math.floor(900 / CONST.SIZE);
-      var id = d.id % n;;
-      var v =  id * CONST.SIZE;
-      d.transform.x = v;
-      return v;
-    },
-    top: function (d) {
-      var v =  Math.floor((d.id * CONST.SIZE) / 900) * CONST.SIZE;
-      d.transform.y = v;
-      return v;
     },
     transform: function (d) {
       return "translate(" + [d.transform.x, d.transform.y] + "),rotate(" + d.transform.r + ")";
