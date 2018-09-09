@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+    <title>毛をむしる</title>
+    <meta charset="UTF-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        var canvas;	//キャンバス
+        var ctx;	//キャンバスコンテキスト
+        var timerDrawID;	//描画タイマーID
+        var startX = 0;	//髪の毛の始点X座標
+        var startY = 0;	//髪の毛の始点Y座標
+        var endX = 0;	//髪の毛の始点X座標
+        var endY = 0;	//髪の毛の始点Y座標
+        var marginX = 0;
+        var marginY = 0;
+        var mouseDown = false;
+        var img;
+        var hairCurve;
+        var hairDetail = 0;
+        var HAIR_DETAIL_MAX = 25; // 毛の長さ最大値
+        var HAIR_DETAIL_MIN = 20; // 毛の長さ最小値
+        var HAIR_LIMIT = 7; // 毛抜け定数
+        var HAIR_FRIZZ = 0.7;
+        var hairX;
+        var hairY;
+        var fallX;
+        var fallY;
+        var fallDiffX = 0;
+        var fallDiffY = 0;
+        var fallDiffR = 3;
+        var fallPick;
+        var pickFlg = false;
+        var fallFlg = false;
+        var canvasWidth;
+        var canvasHeight;
+        var pickCount = 0;
+
+        
+        $(function() {
+           marginX = $('#mainCanvas').position().left ;
+           marginY = $('#mainCanvas').position().top;
+           canvasWidth = $('#mainCanvas').width();
+           canvasHeight = $('#mainCanvas').height();
+           $("#mainCanvas").mousedown(function(e) {
+                startX = e.pageX - marginX;
+                startY = e.pageY - marginY;
+                endX = e.pageX - marginX;
+                endY = e.pageY - marginY;
+                pickFlg = false;
+                if (initHair()) {
+                    mouseDown = true;
+                }
+                //$("#mainCanvas").css({"cursor": 'url(pick.cur), default'});
+            });
+            $("#mainCanvas").mouseup(function(e) {
+                if (mouseDown) {
+                    fallX = hairX;
+                    fallY = hairY;
+                    fallFlg = true;
+                    fallDiffX = 0;
+                    fallDiffY = 10;
+                    fallPick = pickFlg;
+                }
+                mouseDown = false;
+                pickFlg = false;
+                //$("#mainCanvas").css({"cursor": 'url(unpick.cur), default'});
+            });
+            $("#mainCanvas").mousemove(function(e) {
+                endX = e.pageX - marginX;
+                endY = e.pageY - marginY;
+                if (endX > canvasWidth || endX < 30
+                    || endY > canvasHeight || endY < 30) {
+                    if (mouseDown) {
+                        fallX = hairX;
+                        fallY = hairY;
+                        fallFlg = true;
+                        fallDiffX = 0;
+                        fallDiffY = 10;
+                        fallPick = pickFlg;
+                    }
+                    mouseDown = false;
+                    pickFlg = false;
+                    //$("#mainCanvas").css({"cursor": 'url(unpick.cur), default'});
+                }
+            });
+            init();
+        });
+
+        function initHair() {
+            var diff = HAIR_DETAIL_MAX - HAIR_DETAIL_MIN;
+            hairCurve = new Array();
+            hairDetail = HAIR_DETAIL_MIN + Math.floor(Math.random() * diff);
+
+            //ctx.strokeRect(110, 105, 60, 15);
+            //ctx.strokeRect(150, 120, 40, 15);
+            //ctx.strokeRect(180, 135, 20, 50);
+            //ctx.strokeRect(90, 120, 20, 25);
+            //ctx.strokeRect(80, 145, 20, 25);
+
+            if (startX > 110 && startX < 170 && startY > 105 && startY < 130) {
+                hairCurve.push(Math.PI * 3 / 2);
+            } else if (startX > 150 && startX < 190 && startY > 120 && startY < 135) {
+                hairCurve.push(Math.PI * 7 / 4);
+            } else if (startX > 180 && startX < 200 && startY > 135 && startY < 185) {
+                hairCurve.push(Math.PI * 0);
+            } else if (startX > 90 && startX < 110 && startY > 120 && startY < 145) {
+                hairCurve.push(Math.PI * 5/4);
+            } else if (startX > 80 && startX < 100 && startY > 145 && startY < 170) {
+                hairCurve.push(Math.PI * 1);
+            } else {
+                return false;
+            }
+
+            for (var i = 1; i < hairDetail; i ++) {
+                hairCurve[i] = hairCurve[i-1] + Math.random() * HAIR_FRIZZ - HAIR_FRIZZ / 2;
+            }
+            
+            hairX = new Array();
+            hairY = new Array();
+            
+            hairX[hairDetail - 1] = endX;
+            hairY[hairDetail - 1] = endY;
+            
+
+            for (var i = hairDetail - 2; i >= 0; i--) {
+                hairX[i] = hairX[i + 1] - Math.cos(hairCurve[i]);
+                hairY[i] = hairY[i + 1] - Math.sin(hairCurve[i]);
+            }
+            return true;
+        }
+
+        function init() {
+            //キャンバスの初期処理
+            canvas = document.getElementById('mainCanvas');
+            if ( ! canvas || ! canvas.getContext ) return false;
+            //2Dコンテキスト
+            ctx = canvas.getContext('2d');
+
+            img = new Image();
+            img.src = "photo01.jpg?" + new Date().getTime();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            }
+            //タイマー開始
+            setTimerDraw();
+        }
+
+        function setTimerDraw(){
+            clearInterval(timerDrawID);
+            timerDrawID = setInterval("draw()", 50);
+        }
+        
+        function makeHair() {
+            if (pickFlg) {
+                var moveX = endX - hairX[hairDetail - 1];
+                var moveY = endY - hairY[hairDetail - 1];
+                for (var i = 0; i <hairDetail; i++) {
+                    hairX[i] += moveX;
+                    hairY[i] += moveY;
+                }
+                var len = (hairX[0] - hairX[1]) * (hairX[0] - hairX[1])
+                 + (hairY[0] - hairY[1]) * (hairY[0] - hairY[1]);
+                if (len > 2) {
+                    moveX = (endX - hairX[0]) /15 * len;
+                    moveY = (endY - hairY[0]) /15 * len;
+                    for (var i = 0; i <hairDetail; i++) {
+                        hairX[i] += moveX * (hairDetail - i) / hairDetail;
+                        hairY[i] += moveY * (hairDetail - i) / hairDetail;
+                    }
+                }
+            } else {
+                var moveX = endX - hairX[hairDetail - 1];
+                var moveY = endY - hairY[hairDetail - 1];
+                for (var i = 0; i <hairDetail; i++) {
+                    hairX[i] += moveX * (i + 1) / hairDetail;
+                    hairY[i] += moveY * (i + 1) / hairDetail;
+                }
+                if ((hairX[0] - hairX[1]) * (hairX[0] - hairX[1])
+                 + (hairY[0] - hairY[1]) * (hairY[0] - hairY[1]) > HAIR_LIMIT) {
+                    pickCount ++;
+                    pickFlg = true;
+                    $("#count").text(pickCount + "本抜きました");
+                }
+            }
+        }
+        
+        function hairFall() {
+            if (!fallPick) {
+                var moveX = (fallX[hairDetail - 1] - fallX[0]) /3;
+                var moveY = (fallY[hairDetail - 1] - fallY[0]) /3;
+                if (moveX * moveX + moveY * moveY < 3) { fallFlg = false; }
+                for (var i = 0; i <hairDetail; i++) {
+                    fallX[i] -= moveX * i / hairDetail;
+                    fallY[i] -= moveY * i / hairDetail;
+                }
+            } else {
+                fallDiffX += Math.random() * fallDiffR - fallDiffR / 2;
+                fallDiffY += Math.random() * fallDiffR - fallDiffR / 2;
+                for (var i = 0; i <hairDetail; i++) {
+                    fallX[i] += fallDiffX;
+                    fallY[i] += fallDiffY;
+                }
+                if (fallX[0] < 0 || fallX[0] > canvasWidth) { fallFlg = false; }
+                if (fallY[0] < 0 || fallY[0] > canvasHeight) { fallFlg = false; }
+            }
+        }
+
+        function draw() {
+            ctx.beginPath();
+            ctx.drawImage(img, 0, 0);
+            if (mouseDown) {
+                makeHair();
+                ctx.moveTo(hairX[0], hairY[0]);
+                for (var i = 0; i < hairDetail; i ++) {
+                    ctx.lineTo(hairX[i], hairY[i]);
+                }
+            }
+            
+            if (fallFlg) {
+                hairFall();
+                ctx.moveTo(fallX[0], fallY[0]);
+                for (var i = 0; i < hairDetail; i ++) {
+                    ctx.lineTo(fallX[i], fallY[i]);
+                }
+            }
+            
+            //ctx.strokeRect(110, 105, 60, 15);
+            //ctx.strokeRect(150, 120, 40, 15);
+            //ctx.strokeRect(180, 135, 20, 50);
+            //ctx.strokeRect(90, 120, 20, 25);
+            //ctx.strokeRect(80, 145, 20, 25);
+            
+            ctx.stroke();
+        }
+
+    </script> 
+    <style>
+        #mainCanvas {
+            
+        }
+        #count {
+            font-size:30px;
+            width:250px;
+            text-align:right;
+        }
+        #container {
+            border:1px #000 solid;
+            width:260px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+    <div id="count">0本抜きました</div>
+    <canvas id="mainCanvas" width="260" height="391"></canvas><br />
+    髪の毛のあたりをドラッグアンドドロップしてください。(なるべく外側の方が抜きやすいです)
+    </div>
+    <p>うみねこクリア→えっ→髪の毛むしりたい→作った(今ココ！)</p>
+</body>
+</html>
+
+      

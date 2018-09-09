@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>しじみりちゃんは忘れてしまいました</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div ng-app="myApp">
+      <div ng-controller="YouTubeCtrl">
+        <select ng-model="url">
+          <option>touchstone</option>
+          <option>substantived</option>
+          <option>nostril</option>
+          <option>feral</option>
+          <option>emphatically</option>
+          <option>sapper</option>
+          <option>substantived</option>
+          <option>obstetrician</option>
+          <option>autopsy</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+          <option>substantived</option>
+        </select>
+        <div id="image-view">
+            <iframe id="image-view-iframe" ng-src="{{trustSrc(url)}}" scrolling="no"></iframe>
+        </div>
+      </div>
+</body>
+</html>

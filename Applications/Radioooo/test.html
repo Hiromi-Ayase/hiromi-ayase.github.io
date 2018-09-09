@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <script src="js/p/jquery-1.4.2.min.js" type="text/javascript"></script>
+<script>
+function search(query) {
+    var url;
+    var data = $.get('http://gdata.youtube.com/feeds/videos',
+    {
+        'vq':query,
+        'start-index':'1',
+        'max-results':1,
+        'alt':'json-in-script',
+        'format':'1'
+    });
+    alert(data);
+    var e = data.feed.entry[0];
+    var group = e.media$group;
+    url = group.media$player[0].url;
+    return url;
+}
+alert(search("レイアース聞きたい"));
+</script>
+</html>

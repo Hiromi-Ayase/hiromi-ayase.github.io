@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+
+.footer {
+  margin-top: 45px;
+  padding: 35px 0 36px;
+  border-top: 1px solid #e5e5e5;
+  text-align: right;
+}
+
+#result-form {
+    display:none;
+}
+
+#tweet-button {
+    display: none;
+}

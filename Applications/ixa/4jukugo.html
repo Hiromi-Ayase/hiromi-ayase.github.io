@@ -1,0 +1,523 @@
+<!doctype html>
+<html>
+<head>
+    <title>似非四字熟語</title>
+    <meta charset="UTF-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+    <script src="jquery.jmp3.js" type="text/javascript"></script>
+    <script type="text/javascript">
+var jukugoList = [
+"百武賢兼",
+"浅井久政",
+"稲葉一鉄",
+"十河一存",
+"平手政秀",
+"飯富虎昌",
+"木曽義昌",
+"直江景綱",
+"熊谷信直",
+"臼杵鑑速",
+"海北綱親",
+"尼子誠久",
+"三好義賢",
+"斎藤利三",
+"上杉憲政",
+"安藤守就",
+"細川幽斎",
+"尼子晴久",
+"島津歳久",
+"柿崎景家",
+"高坂昌信",
+"今川義元",
+"山中鹿介",
+"松平元康",
+"酒井忠次",
+"柴田勝家",
+"明智光秀",
+"成松信勝",
+"前田利家",
+"高橋紹運",
+"安東愛季",
+"北条綱成",
+"丹羽長秀",
+"南部信直",
+"里見義堯",
+"吉川元春",
+"斎藤朝信",
+"佐々成政",
+"村上義清",
+"真田幸隆",
+"結城政勝",
+"本多忠勝",
+"長尾政景",
+"蘆名盛氏",
+"三好長慶",
+"毛利隆元",
+"丸目長恵",
+"秋山信友",
+"武田晴信",
+"鍋島直茂",
+"滝川一益",
+"佐竹義重",
+"長尾景虎",
+"塚原卜伝",
+"島津貴久",
+"大内義隆",
+"内藤昌豊",
+"村上武吉",
+"馬場信房",
+"織田信長",
+"太原雪斎",
+"武田信繁",
+"南部晴政",
+"北条氏政",
+"榊原康政",
+"長野業正",
+"荒木村重",
+"井伊直政",
+"山県昌景",
+"足利義輝",
+"富田重政",
+"羽柴秀吉",
+"島津義弘",
+"真田昌幸",
+"雑賀孫市",
+"浅井長政",
+"朝倉景健",
+"雨森清貞",
+"島津義久",
+"北条氏康",
+"斎藤義龍",
+"下間頼廉",
+"徳川家康",
+"九鬼嘉隆",
+"服部半蔵",
+"島津家久",
+"立花道雪",
+"長宗我部",
+"松永久秀",
+"山本勘助",
+"足利義昭",
+"大友宗麟",
+"最上義光",
+"武田信玄",
+"上杉謙信",
+"毛利元就",
+];
+        
+        var hoverCss = {
+            border : "1px solid #000",
+            padding : "0px"
+        };
+
+        var unhoverCss = {
+            padding : "1px",
+            border : "none",
+        };
+        
+        var JUKUGO_WIDTH = 56;
+        var JUKUGO_HEIGHT = 41;
+        var MARGIN_LEFT = 20;
+        var MARGIN_TOP = 15;
+
+        var src0 = "SOUND/4jukugo0.mp3";
+        var src1 = "SOUND/4jukugo1.mp3";
+        var src2 = "SOUND/4jukugo2.mp3";
+        var src3 = "SOUND/4jukugo3.mp3";
+        var src4 = "SOUND/4jukugo4.mp3";
+        
+        var audio0 = new Audio();
+        var audio1 = new Audio();
+        var audio2 = new Audio();
+        var audio3 = new Audio();
+        var audio4 = new Audio();
+
+        var JUKUGO_LENGTH = 4;
+        var MAX_STAGE = 7;
+        var numList = [0, 4, 6, 8, 10, 12, 14, 16];
+
+
+        function selectAnswer(num) {
+            var answer = new Array();
+            var start = 0;
+            for (var i = 0; i < stage; i ++) {
+                start += numList[i];
+            }
+            for (var i = start; i < num + start; i ++) {
+                answer.push(jukugoList[i]);
+            }
+            return answer;
+        }
+
+        function shuffleList() {
+            for (var i = 0; i < jukugoList.length; i++){
+                var tmpA, tmpB, rnd;
+                var rnd = Math.floor(Math.random() * jukugoList.length);
+                tmpA = jukugoList[i];
+                tmpB = jukugoList[rnd];
+                jukugoList[i] = tmpB;
+                jukugoList[rnd] = tmpA;
+            }
+        }
+        
+        function shuffleAnswer(answer) {
+            var list = new Array();
+            for (var i = 0; i < answer.length; i ++) {
+                for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                    list.push(answer[i].charAt(j));
+                }
+            }
+            for (var i = 0; i < list.length; i++){
+                var tmpA, tmpB, rnd;
+                var rnd = Math.floor(Math.random() * list.length);
+                tmpA = list[i];
+                tmpB = list[rnd];
+                list[i] = tmpB;
+                list[rnd] = tmpA;
+            }
+            var shuffle = new Array();
+            for (var i = 0; i < answer.length; i ++) {
+                var s = "";
+                for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                    s += list[i * JUKUGO_LENGTH + j];
+                }
+                shuffle.push(s);
+            }
+            return shuffle;
+        }
+
+        var stage;
+        function init($) {
+            $(".kanji").remove();
+            $("#clearTxt").html("GAME<br />START");
+            $("#table").css({
+                display:"none"
+            });
+            $("#tableBack").css({
+                display:"none"
+            });
+            stage = 0;
+            shuffleList();
+            opening($);
+        }
+
+        function opening($) {
+            $("#container").css({background:"url(opening.png) bottom left no-repeat"});
+            $("#clear").css({display:"block"});
+        }
+
+        function ending($) {
+            $(".kanji").remove();
+            $("#table").css({
+                display:"none"
+            });
+            $("#tableBack").css({
+                display:"none"
+            });
+
+            $("#container").fadeOut("slow");
+
+            var endFunc = function(){
+                $("#container").css({background:"url(ending.png) bottom left no-repeat"});
+                $("#container").fadeIn("slow");
+                audio4.play();
+            }
+            var tid=setTimeout(endFunc,1000);
+        }
+
+        function start($) {
+            $(".kanji").remove();
+            var num = numList[stage];
+            var answer = selectAnswer(num);
+            var shuffle = shuffleAnswer(answer);
+            var isAnswered = {};
+
+            $("#stage").text("STAGE" + stage);
+
+
+            var selectedKanji = "";
+            var num2 = 0;
+            if (num > 8) {
+                num2 = num / 2;
+                num = num2;
+            }
+            for (var i = 0; i < num; i ++) {
+                var jukugo = shuffle[i];
+                for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                    var kanji = "kanji_" + i + "_" + j;
+                    isAnswered[kanji] = false;
+                    $("#table").append("<div class=\"kanji\" id=\""+ kanji + "\">" + jukugo.charAt(j) + "</div>");
+                    $("#" + kanji).css({left:(MARGIN_LEFT + i * JUKUGO_WIDTH), top:(MARGIN_TOP + j * JUKUGO_HEIGHT)});
+                }
+            }
+            for (var i = 0; i < num2; i ++) {
+                var jukugo = shuffle[i + num];
+                for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                    var kanji = "kanji_" + (i + num) + "_" + j;
+                    isAnswered[kanji] = false;
+                    $("#table").append("<div class=\"kanji\" id=\""+ kanji + "\">" + jukugo.charAt(j) + "</div>");
+                    $("#" + kanji).css({left:(MARGIN_LEFT + i * JUKUGO_WIDTH), top:(MARGIN_TOP * 2 + (j + JUKUGO_LENGTH) * JUKUGO_HEIGHT)});
+                }
+            }
+            
+            
+            var tableWidth = MARGIN_LEFT * 2 + (num - 1) * JUKUGO_WIDTH + 38;
+            var tableHeight = MARGIN_TOP * 2 + JUKUGO_LENGTH * JUKUGO_HEIGHT;
+            
+            if (num2 > 0) { tableHeight += MARGIN_TOP + JUKUGO_LENGTH * JUKUGO_HEIGHT; }
+            $("#table").css({
+                width : tableWidth,
+                height : tableHeight,
+                left : (320 - tableWidth / 2),
+                top : (210 - tableHeight / 2),
+                display:"block"
+            });
+            $("#tableBack").css({
+                width : tableWidth,
+                height : tableHeight,
+                left : (320 - tableWidth / 2),
+                top : (210 - tableHeight / 2),
+                display:"block"
+            });
+
+            $(".kanji").hover(
+                function(){
+                    var id = $(this).attr("id");
+                    if(selectedKanji != id && !isAnswered[id]) {
+                        $(this).css(hoverCss);
+                    }
+               },
+               function(){
+                    var id = $(this).attr("id");
+                    if(selectedKanji != id && !isAnswered[id]) {
+                        $(this).css(unhoverCss);
+                    }
+               }
+            );
+            
+
+
+            $(".kanji").bind("click", function() {
+                if (isAnswered[$(this).attr("id")]) { return; }
+                audio1.play();
+
+                if (selectedKanji == $(this).attr("id")) {
+                    $(this).css(hoverCss);
+                    $(this).css({background:"none", color:"black"});
+                    selectedKanji = "";
+                } else if (selectedKanji != "") {
+                    var selectedId = "#" + selectedKanji;
+                    var kanji1 = $(selectedId).text();
+                    var kanji2 = $(this).text();
+                    $(selectedId).text(kanji2);
+                    $(this).text(kanji1);
+                    $(selectedId).css({background:"none", color:"black"});
+                    selectedKanji = "";
+                    
+                    
+                    // 正答確認
+                    var arg1 = $(selectedId).attr("id").split("_");
+                    var arg2 = $(this).attr("id").split("_");
+                    var i1 = arg1[1];
+                    var i2 = arg2[1];
+                    
+                    var jukugo1 = "";
+                    var jukugo2 = "";
+                    for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                        var kanjiId1 = "#kanji_" + i1 + "_" + j;
+                        var kanjiId2 = "#kanji_" + i2 + "_" + j;
+                        jukugo1 += $(kanjiId1).text();
+                        jukugo2 += $(kanjiId2).text();
+                    }
+
+                    var isCorrect1 = false;
+                    var isCorrect2 = false;
+                    for (var i = 0; i < answer.length; i ++) {
+                        if (answer[i] == jukugo1) { isCorrect1 = true; }
+                        if (answer[i] == jukugo2) { isCorrect2 = true; }
+                        if (isCorrect1 && isCorrect2) { break; }
+                    }
+                    
+                    if (isCorrect1) {
+                        for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                            var kanji = "kanji_" + i1 + "_" + j;
+                            var kanjiId = "#" + kanji;
+                            $(kanjiId).css(unhoverCss);
+                            $(kanjiId).css({backgroundColor:"#888", color:"white", cursor:"default"});
+                            isAnswered[kanji] = true;
+                        }
+                    }
+                    if (isCorrect2) {
+                        for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                            var kanji = "kanji_" + i2 + "_" + j;
+                            var kanjiId = "#" + kanji;
+                            $(kanjiId).css(unhoverCss);
+                            $(kanjiId).css({backgroundColor:"#888", color:"white", cursor:"default"});
+                            isAnswered[kanji] = true;
+                        }
+                    }
+                    
+                    // クリア確認
+                    if (isCorrect1 || isCorrect2) {
+                        audio0.play();
+                        var isClear = true;
+                        for (var i = 0; i < num + num2; i ++) {
+                            for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                                var kanji = "kanji_" + i + "_" + j;
+                                if (!isAnswered[kanji]) {
+                                    isClear = false;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        var clearFunc = function(){
+                            for (var i = 0; i < num + num2; i ++) {
+                                for (var j = 0; j < JUKUGO_LENGTH; j ++) {
+                                    var kanji = "kanji_" + i + "_" + j;
+                                    var kanjiId = "#" + kanji;
+                                    $(kanjiId).css({background:"none", color:"black"});
+                                }
+                            }
+                            $("#clear").css({display:"block"});
+                            audio3.play();
+                        }
+                        if (isClear) { // DEBUG
+                            var tid=setTimeout(clearFunc,500);
+                        }
+                    }
+                } else {
+                    selectedKanji = $(this).attr("id");
+                    $(this).css(unhoverCss);
+                    $(this).css({backgroundColor:"red", color:"white"});
+                }
+            });
+        };
+        
+        
+        $(function() {
+            $("#reset").bind("click", function() {
+                init($);
+            });
+            $("#clearTxt").bind("click", function() {
+                $("#clear").css({display:"none"});
+                $("#container").css({background:"url(casko.png) bottom left no-repeat"});
+                stage ++;
+                if (stage > MAX_STAGE) {
+                    ending($);
+                } else if (stage == MAX_STAGE) {
+                    audio2.play();
+                    $(this).html("GAME<br />CLEAR");
+                    start($);
+                } else {
+                    audio2.play();
+                    $(this).html("NEXT<br />STAGE");
+                    start($);
+                }
+            });
+            
+            audio0.src = src0;
+            audio1.src = src1;
+            audio2.src = src2;
+            audio3.src = src3;
+            audio4.src = src4;
+            audio0.load();
+            audio1.load();
+            audio2.load();
+            audio3.load();
+            audio4.load();
+
+            init($);
+        });
+
+
+    </script>
+    <style>
+        li { list-style:none; }
+        #container {
+            border :1px solid #000;
+            width  : 640px;
+            height : 420px;
+            margin : 50px;
+            position: absolute;
+            background:url(opening.png) bottom left no-repeat;
+        }
+        .kanji {
+            width  : 38px;
+            height : 38px;
+            font-size : 38px;
+            font-family: "ＭＳ 明朝",serif;
+            font-weight:bold;
+            position: absolute;
+            padding:1px;
+            cursor:pointer;
+            margin:1px;
+            text-align :center;
+        }
+        #table {
+            position : absolute;
+        }
+        #tableBack {
+            position : absolute;
+            background-color : #FFF;
+            opacity:0.9;
+        }
+        #reset {
+            font-size:12px;
+            font-weight:bold;
+            font-family: "Arial Black",serif;
+            color : #AAA;
+            width:60px;
+            text-align:center;
+            right:0px;
+            position:absolute;
+            cursor:pointer;
+        }
+        #stage {
+            font-size:12px;
+            font-weight:bold;
+            font-family: "Arial Black",serif;
+            color : #AAA;
+            width:60px;
+            text-align:center;
+            left:0px;
+            position:absolute;
+        }
+        #clear {
+            width:130px;
+            height:132px;
+            right:0px;
+            bottom:0px;
+            background:url("next.gif") no-repeat;
+            position:absolute;
+            text-align:right;
+            display:none;
+        }
+        #clearTxt {
+            line-height:25px;
+            text-align:right;
+            padding-right:20px;
+            padding-top:50px;
+            font-size:18px;
+            font-weight:bold;
+            font-family: "Arial",serif;
+            color : #FFF;
+            cursor:pointer;
+            margin-left:40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="reset">RESET</div>
+        <div id="stage"></div>
+        <div id="tableBack"></div>
+        <div id="table"></div>
+        <div id="clear"><div id="clearTxt">GAME<br />START</div></div>
+    </div>
+    <img src="opening.png" style="width:1px;height:1px;" />
+    <img src="casko.png" style="width:1px;height:1px;" />
+</body>
+</html>
+
+      

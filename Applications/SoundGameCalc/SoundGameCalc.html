@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  >
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>音ゲ計算機</title>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load("jquery", "1.7");
+google.setOnLoadCallback(function() {
+    $(function() {
+        validate();
+    });
+
+});
+function validate() {
+    if (!isNaN($("#total-notes").val())) {
+        $("#total-notes").val(1000);
+    } else if (Number($("#total-notes").val()) < 0) {
+        $("#total-notes").val(0);
+    }
+
+    if (!isNaN($("#precision").val())) {
+        $("#precision").val(95);
+    } else if (Number($("#precision").val()) > 100) {
+        $("#precision").val(100);
+    } else if (Number($("#precision").val()) < 0) {
+        $("#precision").val(0);
+    }
+}
+
+function combination(n, k, p) {
+    var result = 1;
+
+    for (var i = 1; i <= n - k; i ++) {
+        result *= (n - i + 1) / i * (1 - p);
+    }
+    return result;
+}
+
+function twitterAPI(data_text){
+    // 要素の存在チェック
+    if($("#twitter iframe").size() > 0){
+        $("#twitter").empty();
+    }
+    
+    $(function(){
+        var e = document.createElement('script');
+        e.src = document.location.protocol + '//platform.twitter.com/widgets.js';
+        e.async = true;
+        document.getElementById('twitter').appendChild(e);
+        
+        $("#twitter").append("<h2>Twitterで自慢する</h2> <a href='http://twitter.com/share' class='twitter-share-button'>Tweet</a>");
+        $('#twitter a').attr("data-text", data_text);
+        $('#twitter a').attr("data-size", "large");
+    });
+}
+
+function fact(x, lambda) {
+    var ret = 1;
+    for (var i = 1; i <= x; i ++) {
+        ret = ret * lambda / i;
+    }
+    return ret;
+}
+
+function calc() {
+    var k0 = Number($("#notes").val());
+    var n = Number($("#total-notes").val());
+    var p = Number($("#precision").val()) / 100;
+
+    var result = 0;
+
+    var exp = new Array(1000);
+    for (var i = 0; i <= 1000; i ++) {
+        exp[i] = n;
+    }
+    for (var k = n; k >= 1; k --) {
+        var x = Math.pow(p, k);
+        var f = combination(n, k, p);
+        result += f * x;
+        
+        for (var i = Math.floor(result * 1000); i <= 1000; i ++) {
+            exp[i] = k;
+        }
+    }
+
+    var perfect = Math.floor(1 / Math.pow(p, n));
+
+    $("#result1").val(exp[1]);
+    $("#result30").val(exp[300]);
+    $("#result50").val(exp[500]);
+    $("#result80").val(exp[800]);
+    $("#result98").val(exp[998]);
+    $("#perfect").val(perfect);
+    $("#precision").val(p * 100);
+
+
+    var perfectText = "";
+    if (perfect < 10000000) {
+        perfectText = "し、パーフェクトも" + perfect + "回に1回は出せるんです";
+    }
+    
+    var text = "私は" + n + "ノーツの音ゲーでは大体3回に1回は" + exp[300] + "以上叩けます" + perfectText + "。すごいでしょ？ #音ゲ計算機";
+
+    twitterAPI(text);
+
+    $("#result-form").show();
+
+}
+</script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.css" /></head>
+<body>
+
+<div class="container">
+<div class="hero-unit">
+    <h1>音ゲー期待値計算機</h1>
+</div>
+
+<form class="form-horizontal" id="calc-form">
+    <label>プレイした曲のトータルノーツと1打当たり精度を入力してください。(どんなゲームでもどんな曲でもいいです。)</label>
+    <div class="control-group">
+        <label class="control-label" for="total-notes">トータルノーツ</label>
+        <div class="controls">
+            <input type="text" class="input-mini" id="total-notes" /> Notes
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="precision">1打当たり精度</label>
+        <div class="controls">
+            <input type="text" class="input-mini"  id="precision" /> %
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-large btn-primary" onclick="calc()" />計算</button>
+    </div>
+    
+    <div id="result-form">
+        <label>あなたはおよそ以下の割合で次のスコアを超えることができます</label>
+        <div class="control-group">
+            <label class="control-label" for="result1">1000回に1回</label>
+            <div class="controls">
+                <input class="input-mini disabled" id="result1" type="text" disabled /> Notes
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="result30">3回に1回</label>
+            <div class="controls">
+                <input class="input-mini disabled" id="result30" type="text" disabled /> Notes
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="result50">2回に1回</label>
+            <div class="controls">
+                <input class="input-mini disabled" id="result50" type="text" disabled /> Notes
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="result80">5回に4回</label>
+            <div class="controls">
+                <input class="input-mini disabled" id="result80" type="text" disabled /> Notes
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="result98">ほとんどいつも</label>
+            <div class="controls">
+                <input class="input-mini disabled" id="result98" type="text" disabled /> Notes
+            </div>
+        </div>
+        <hr>
+        <label>確率的にはパーフェクトを以下の割合で出すことが可能です。</label>
+        <div class="control-group">
+            <label class="control-label" for="perfect">パーフェクト</label>
+            <div class="controls">
+                <input class="input-medium disabled" id="perfect" type="text" disabled /> 回に1回
+            </div>
+        </div>
+        <hr>
+        <span id="twitter"></span>
+    </div>
+</form>
+
+
+<footer class="footer">
+        <p><a href="http://twitter.com/hiromi_ayase">Hiromi Ayase</a></p>
+</footer>
+</div>
+</body>
+</html>

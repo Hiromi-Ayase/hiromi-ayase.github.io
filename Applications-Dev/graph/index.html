@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Graph test</title>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/c3.css" rel="stylesheet" type="text/css">
+<link href="css/lightbox.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<h2>Data1</h2>
+<a href="output/image-1.jpg" data-lightbox="roadtrip">Image #1</a>
+<a href="output/image-2.jpg" data-lightbox="roadtrip">Image #2</a>
+<input type="text" ng-model="data1" placeholder="Enter the data">
+<div id='chart1'></div>
+
+<h2>Data2</h2>
+<input type="text" ng-model="data2" placeholder="Enter the data">
+<div id='chart2'></div>
+
+<h2>Data3</h2>
+<input type="text" ng-model="data3" placeholder="Enter the data">
+<div id='chart3'></div>
+
+<h2>Data4</h2>
+<input type="text" ng-model="data4" placeholder="Enter the data">
+<div id='chart4'></div>
+
+<h2>Data5</h2>
+<input type="text" ng-model="data5" placeholder="Enter the data">
+<div id='chart5'></div>
+
+<h2>Data6</h2>
+<input type="text" ng-model="data6" placeholder="Enter the data">
+<div id='chart6'></div>
+
+<!-- SCRIPTS -->
+<script src="js/d3.min.js"></script>
+<script src="js/c3.min.js"></script>
+<script src="js/lightbox-plus-jquery.min.js"></script>
+<script>
+
+var sample1 = ['sample1'];
+var sample2 = ['sample2'];
+var sample3 = ['standard'];
+var now1 = 0;
+var now2 = 0;
+var now3 = 0;
+for (var i = 0; i < 500; i ++) {
+	now1 += Math.random() * 10 - 5;
+	now2 += Math.random() * 10 - 5;
+	now3 += Math.random() * 10 - 5;
+	sample1.push(now1 + Math.random() * 100);
+	sample2.push(now2 + Math.random() * 100);
+	sample3.push(now3);
+}
+
+var graph = function (no) {
+	return {
+		bindto: "#chart" + no,
+		data: {
+			columns: [sample1, sample3],
+			type: 'area-spline'
+		},
+		subchart: { show: true },
+		zoom: { enabled: true },
+		grid: { x: { show: true }, y: { show: true } },
+		tooltip: {
+			format: {
+				title: function (d) { return 'Data ' + d; },
+				value: function (value, ratio, id) {
+					var format = id === 'data1' ? d3.format(',') : d3.format('$');
+					return format(value);
+				}
+			}
+		}
+	};
+};
+
+var chart1 = c3.generate(graph(1));
+var chart2 = c3.generate(graph(2));
+var chart3 = c3.generate(graph(3));
+var chart4 = c3.generate(graph(4));
+var chart5 = c3.generate(graph(5));
+var chart6 = c3.generate(graph(6));
+
+
+</script>
+</body>
+</html>
+

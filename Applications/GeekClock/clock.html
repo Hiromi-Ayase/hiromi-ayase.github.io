@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>Geek Clock</title>
+<script type="text/javascript">
+onload = function() {
+	var canvas = document.getElementById("geekClock");
+	var ctx = canvas.getContext("2d");
+	var img = new Image();
+	img.src="clock.png"
+
+	var width = parseInt(canvas.width);
+	var height = parseInt(canvas.height);
+	var centerX = width / 2;
+	var centerY = height / 2;
+	var radius = Math.min(centerX, centerY) * 0.9;
+	var color = "#000000";
+	var shadowAlpha = 0.5;
+	var shadowSize = 1;
+
+	function drawHand(angle, len, size) {
+		var cos = Math.cos(angle);
+		var sin = Math.sin(angle);
+		var x = centerX + len * cos;
+		var y = centerY + len * sin;
+
+		var shadowX = centerX + (len + shadowSize) * cos;
+		var shadowY = centerY + (len + shadowSize) * sin;
+		ctx.strokeStyle = color;
+
+		ctx.lineCap = "butt";
+		ctx.globalAlpha = shadowAlpha
+		ctx.lineWidth = size + shadowSize;
+		ctx.beginPath();
+		ctx.moveTo(centerX, centerY);
+		ctx.lineTo(shadowX, shadowY);
+		ctx.stroke();
+
+		ctx.lineCap = "butt";
+		ctx.globalAlpha = 1.0
+		ctx.lineWidth = size;
+		ctx.beginPath();
+		ctx.moveTo(centerX, centerY);
+		ctx.lineTo(x, y);
+		ctx.stroke();
+	}
+
+	function drawSecHand(angle, len, size) {
+		var cos = Math.cos(angle);
+		var sin = Math.sin(angle);
+
+		var x1 = centerX - len * 0.4 * cos;
+		var y1 = centerY - len * 0.4 * sin;
+
+		var x2 = centerX + len * cos;
+		var y2 = centerY + len * sin;
+
+		var shadowX1 = centerX - (len * 0.4 + shadowSize) * cos;
+		var shadowY1 = centerY - (len * 0.4 + shadowSize) * sin;
+
+		var shadowX2 = centerX + (len + shadowSize) * cos;
+		var shadowY2 = centerY + (len + shadowSize) * sin;
+
+		var secCenterX = centerX - len * 0.1 * cos;
+		var secCenterY = centerY - len * 0.1 * sin;
+		ctx.strokeStyle = color;
+
+		ctx.lineCap = "butt";
+		ctx.globalAlpha = shadowAlpha
+		ctx.lineWidth = size * 3 + shadowSize;
+		ctx.beginPath();
+		ctx.moveTo(secCenterX, secCenterY);
+		ctx.lineTo(shadowX1, shadowY1);
+		ctx.stroke();
+
+		ctx.lineCap = "butt";
+		ctx.globalAlpha = 1.0
+		ctx.lineWidth = size * 3;
+		ctx.beginPath();
+		ctx.moveTo(secCenterX, secCenterY);
+		ctx.lineTo(x1, y1);
+		ctx.stroke();
+
+		ctx.lineCap = "round"
+		ctx.globalAlpha = shadowAlpha
+		ctx.lineWidth = size + shadowSize;
+		ctx.beginPath();
+		ctx.moveTo(secCenterX, secCenterY);
+		ctx.lineTo(shadowX2, shadowY2);
+		ctx.stroke();
+
+		ctx.lineCap = "round"
+		ctx.globalAlpha = 1.0
+		ctx.lineWidth = size;
+		ctx.beginPath();
+		ctx.moveTo(secCenterX, secCenterY);
+		ctx.lineTo(x2, y2);
+		ctx.stroke();
+	}
+
+	function drawCenter(size) {
+		ctx.globalAlpha = shadowAlpha
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, size + shadowSize, 0, Math.PI*2, false);
+		ctx.fill();
+
+		ctx.globalAlpha = 1.0
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, size, 0, Math.PI*2, false);
+		ctx.fill();
+	}
+	
+	function draw() {
+		var date = new Date();
+		var hour = date.getHours();
+		var min  = date.getMinutes();
+		var sec  = date.getSeconds();
+		
+		var hAngle = Math.PI * 2 * ((hour + min / 60 - 3) / 12);
+		var hLength = radius * 0.5;
+
+		var mAngle = Math.PI * 2 * (min - 15) / 60;
+		var mLength = radius * 0.7;
+		
+		var sAngle = Math.PI * 2 * (sec - 15) / 60;
+		var sLength = radius * 0.7;
+
+		ctx.clearRect(0, 0, width, height);
+		ctx.drawImage(img, 0, 0);
+		drawCenter(7);
+		drawHand(hAngle, hLength, 8);
+		drawHand(mAngle, mLength, 5);
+		drawSecHand(sAngle, sLength, 2);
+		
+	}
+	
+	img.onload=setInterval(draw, 100);
+}
+
+</script>
+</head><body>
+<canvas id="geekClock" width="490" height="490"></canvas>
+</body>
+</html>
+

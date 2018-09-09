@@ -1,0 +1,6 @@
+C:\Users\User\Source\Repos\ShizimilyRogue\ShizimilyRogue\bin\ShizimilyRogue.dll.config
+C:\Users\User\Source\Repos\ShizimilyRogue\ShizimilyRogue\bin\ShizimilyRogue.dll
+C:\Users\User\Source\Repos\ShizimilyRogue\ShizimilyRogue\bin\ShizimilyRogue.pdb
+C:\Users\User\Source\Repos\ShizimilyRogue\ShizimilyRogue\obj\Debug\ShizimilyRogue.dll
+C:\Users\User\Source\Repos\ShizimilyRogue\ShizimilyRogue\obj\Debug\ShizimilyRogue.pdb
+C:\Users\User\Source\Repos\ShizimilyRogue\ShizimilyRogue\obj\Debug\ShizimilyRogue.csprojResolveAssemblyReference.cache

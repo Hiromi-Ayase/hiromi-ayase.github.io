@@ -1,0 +1,13 @@
+#container {
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+}
+body {
+    overflow:hidden;
+    background-color: black;
+}
+
+#description {
+    color:  white;
+}

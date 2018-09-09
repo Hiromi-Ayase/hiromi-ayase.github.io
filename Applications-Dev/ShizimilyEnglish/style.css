@@ -1,0 +1,13 @@
+
+#image-view-iframe {
+    width: 1000px;
+    height: 500px;
+    border: none;
+    margin-top: -100px;
+}
+
+#image-view {
+    overflow: hidden;
+    width: 1000px;
+    border: 1px solid #000;
+}

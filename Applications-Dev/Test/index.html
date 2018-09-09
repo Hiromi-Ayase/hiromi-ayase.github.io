@@ -1,0 +1,35 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title>jQuery Deferred example</title>
+<meta name="viewport" content="width=device-width">
+<script src="jquery.js"></script>
+<script src="script.js"></script>
+<style>
+.status-value {
+    padding:20px;
+}
+
+.up {
+    padding:20px;
+}
+</style>
+</head>
+<body>
+<button id="button">Run</button><input type="text" id="status-condition"></input>
+<br/>
+<br/>
+<div class="status"><span class="status-label">HP :</span><span class="status-value" id="HP"></span> <span class="up" id="HP-UP"></span></div>
+<div class="status"><span class="status-label">ATK:</span><span class="status-value" id="ATK"></span> <span class="up" id="ATK-UP"></span></div>
+<div class="status"><span class="status-label">DEF:</span><span class="status-value" id="DEF"></span> <span class="up" id="DEF-UP"></span></div>
+<div class="status"><span class="status-label">DEX:</span><span class="status-value" id="DEX"></span> <span class="up" id="DEX-UP"></span></div>
+<div class="status"><span class="status-label">AGI:</span><span class="status-value" id="AGI"></span> <span class="up" id="AGI-UP"></span></div>
+<div class="status"><span class="status-label">LUK:</span><span class="status-value" id="LUK"></span> <span class="up" id="LUK-UP"></span></div>
+
+<br/>
+<br/>
+<div>条件:<span id="message"></span></div>
+<div>結果:<span id="result"></span></div>
+</body>
+</html>

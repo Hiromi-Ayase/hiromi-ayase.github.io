@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="tactical-board" lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">        <link href="css/style.css" rel="stylesheet" />
+        <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+        <script type="text/javascript" src="js/ui-bootstrap-tpls-0.10.0.min.js"></script>
+        <script type="text/javascript" src="js/flag.js"></script>
+        <script type="text/javascript" src="js/ui.js"></script>
+    </head>
+    <body>
+        <div class="container" ng-controller="MainController">
+            <div class="row">
+                <div class="col-xs-4">
+                    <img id="image-title" src="img/title.jpg" width="100%"/>
+                </div>
+                <div class="col-xs-2">
+                    <div class="controls">
+                        <label class="checkbox"><input ng-model="visibleRed" ng-change="changeVisible()" type="checkbox"/> visible <span id="visible-red-text">Red</span> side</label>
+                        <label class="checkbox"><input ng-model="visibleBlue" ng-change="changeVisible()" type="checkbox"/> visible <span id="visible-blue-text">Blue</span> side</label>
+                    </div>
+                </div>
+                <div class="col-xs-1">
+                    <div class="controls">
+                        <label class="radio"><input ng-model="level" ng-change="changeLevel()" type="radio" value="2"/> Level2</label>
+                        <label class="radio"><input ng-model="level" ng-change="changeLevel()" type="radio" value="1"/> Level1</label>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <label class="text" id="size">
+                        Size: <input id="width" type="number" class="form-control board-size" ng-model="width" ng-change="changeSize()" min="10" max="50"> x <input id="height" type="number" class="form-control board-size" ng-model="height" ng-change="changeSize()" min="10" max="50">
+                    </label>
+                </div>
+                <div class="col-xs-2"><img class="pull-right" src="img/logo.jpg" /></div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="player-pool" ng-model="playerPool" class="well">
+                        <span id="Red-Player1" class="player" player="red"></span>
+                        <span id="Red-Player2" class="player" player="red"></span>
+                        <span id="Red-Player3" class="player" player="red"></span>
+                        <span id="Red-Player4" class="player" player="red"></span>
+                        <span id="Red-Player5" class="player" player="red"></span>
+                        <span id="Red-Player6" class="player" player="red"></span>
+                        <span id="Red-Player7" class="player" player="red"></span>
+                        <span id="Red-Player8" class="player" player="red"></span>
+                        <span id="Red-Player9" class="player" player="red"></span>
+                        <span id="Red-Player10" class="player" player="red"></span>
+                        <span id="Red-Player11" class="player" player="red"></span>
+                        <span id="Red-Player12" class="player" player="red"></span>
+                        <span id="Blue-Player1" class="player" player="blue"></span>
+                        <span id="Blue-Player2" class="player" player="blue"></span>
+                        <span id="Blue-Player3" class="player" player="blue"></span>
+                        <span id="Blue-Player4" class="player" player="blue"></span>
+                        <span id="Blue-Player5" class="player" player="blue"></span>
+                        <span id="Blue-Player6" class="player" player="blue"></span>
+                        <span id="Blue-Player7" class="player" player="blue"></span>
+                        <span id="Blue-Player8" class="player" player="blue"></span>
+                        <span id="Blue-Player9" class="player" player="blue"></span>
+                        <span id="Blue-Player10" class="player" player="blue"></span>
+                        <span id="Blue-Player11" class="player" player="blue"></span>
+                        <span id="Blue-Player12" class="player" player="blue"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="text"><input type="number" class="form-control" id="angle" ng-model="angle" ng-change="changeAngle()" min="0" max="360"> View angle of each player</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <canvas id="canvas" width="900" height="900"></canvas>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="control-group">
+                        <div class="controls text-center">
+                            <button type="button" class="btn btn-default" ng-click="exportToCSV()"><span class="glyphicon glyphicon-folder-close"></span> Export CSV</button>
+                            <button type="button" class="btn btn-default" ng-click="loadFromCSV()"><span class="glyphicon glyphicon-folder-open"></span> Import CSV</button>
+                            <button type="button" class="btn btn-default" ng-click="save()"><span class="glyphicon glyphicon-folder-close"></span> Save</button>
+                            <button type="button" class="btn btn-default" ng-click="load()"><span class="glyphicon glyphicon-folder-open"></span> Load</button>
+                            <button type="button" class="btn btn-default" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <button type="button" class="btn btn-default" ng-click="image()"><span class="glyphicon glyphicon-picture"></span> Image</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                        <label class="checkbox"><input ng-model="symmetry" ng-change="setSymmetryBlocks()" type="checkbox" value="2"/>Set Symmetry Blocks</label>
+                        Shift/Ctrl + Left Click: Start/Flag
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="control-group">
+                        <label class="control-label" for="textarea">CSV:</label>
+                        <div class="controls">
+                            <textarea class="input-large" id="csvarea" ng-model="csv" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/ng-template" id="exportImageModal.html">
+            <div class="modal-header">
+                <h3>Export as an image data.</h3>
+            </div>
+            <div class="modal-body">
+                <img src="{{imagePath}}" width="100%" title="Click the right button and save this image."/>
+                Click the right button and save this image.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+            </div>
+        </script>
+    </body>
+</html>

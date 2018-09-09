@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>くえいふぉん</title>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="jquery.mobile-1.0.min.css" />
+  <script src="js/jquery-1.6.4.min.js"></script>
+  <script src="js/jquery.mobile-1.0.min.js"></script>
+  <script src="js/twitter.js"></script>
+  <script src="js/oauth.js"></script>
+  <script src="js/sha1.js"></script>
+  <style>
+  .ui-btn-inner {
+    width:auto;
+    padding:1.0em 3px;
+    font-size:12px;
+  }
+  .ui-btn {
+    width:23%;
+    margin:5px 0.5px;
+  }
+  .type-index {
+    background:#222;
+  }
+  #twitter-frame {
+    display:none;
+  }
+  #twitter-form {
+    display:none;
+  }
+  </style>
+</head>
+<body>
+<div data-role="page" class="type-index" >
+  <div class="ui-body ui-body-a">
+    <p id="title">QueiPhone(0)</p> 
+    <form action="#" method="post"> 
+      <textarea cols="40" rows="8" name="textarea" id="text" data-theme="c"></textarea> 
+      <fieldset class="ui-grid-a"> 
+        <button type="submit" data-inline="true" data-theme="c" id="tweet">Tweet</button>
+        <button type="submit" data-inline="true" data-theme="c" id="hash">Hash</button>
+        <button type="submit" data-inline="true" data-theme="c" id="loc">Loc</button>
+        <button type="submit" data-inline="true" data-theme="c" id="x">x</button>
+      </fieldset> 
+    </form> 
+  </div>
+</div>
+<form id="twitter-form" name="twitter-form" method="post" action="https://api.twitter.com/1/statuses/update.xml" target="twitter-frame">
+</form>
+<iframe id="twitter-frame" name="twitter-frame"></iframe>
+</body>
+</html>

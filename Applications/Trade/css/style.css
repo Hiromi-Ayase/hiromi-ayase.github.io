@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+
+* {
+    margin: 0px;
+}
+
+
+td {
+text-align:center;
+}
+
+.chart {
+    height: 400px;
+}
+
+.board-element {
+    text-align: center;
+}
+.stock {
+}
+.board {
+    margin-top:20px;
+}
+
+#trader-container {
+    margin-top:20px;
+    padding-left:40px;
+}
+

@@ -1,0 +1,75 @@
+#image-title {
+    padding-top:25px;
+}
+
+#player-pool {
+    height:10px;
+}
+
+#visible-red-text {
+    color: red;
+}
+
+#visible-blue-text {
+    color: blue;
+}
+
+#canvas {
+    -webkit-user-select:none;
+    margin-left:15px;
+    margin-bottom:15px;
+}
+
+.player {
+    z-index:100;
+}
+
+#size {
+    margin-top:10px;
+}
+
+#player-pool {
+    height:28px;
+    padding:2px;
+}
+
+#csvarea {
+    width:100%;
+}
+
+#angle {
+    width: 80px;
+    display:inline;
+}
+
+
+.board-size {
+    width:60px;
+    display:inline;
+}
+
+
+.container {
+  max-width: none !important;
+  width: 970px;
+}
+
+.navbar-collapse {
+  display: block !important;
+  height: auto !important;
+  padding-bottom: 0;
+  overflow: visible !important;
+}
+
+.navbar-toggle {
+  display: none;
+}
+
+.navbar-brand {
+  margin-left: -15px;
+}
+
+label {
+    font-weight: normal;
+}
+
